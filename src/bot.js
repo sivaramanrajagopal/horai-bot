@@ -614,7 +614,6 @@ schedule.scheduleJob('0 * * * *', sendHoraNotification);
 
 // Schedule notification for every Sub-Hora change (every 12 minutes)
 schedule.scheduleJob('*/12 * * * *', sendHoraNotification);
-const axios = require('axios');
 
 // Replace with your Render URL
 const RENDER_URL = "https://horai-bot.onrender.com";
@@ -630,9 +629,8 @@ function keepAlive() {
         } catch (error) {
             console.error('⚠️ Self-ping failed:', error.message);
         }
-    }, 40000); // Ping every 40 seconds to prevent sleeping
+    }, 40000); // Ping every 40 seconds
 }
-
 keepAlive(); // Start self-pinging
 // Start bot
 bot.launch()
