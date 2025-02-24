@@ -619,11 +619,21 @@ const axios = require('axios');
 // Replace with your Render URL
 const RENDER_URL = "https://horai-bot.onrender.com";
 
-setInterval(() => {
-    axios.get(RENDER_URL)
-        .then(() => console.log("Pinged self to prevent sleeping"))
-        .catch((err) => console.error("Error pinging self:", err));
-}, 40000); // Every 40 seconds (40,000 ms)
+const axios = require('axios');
+
+function keepAlive() {
+    const url = 'https://your-bot-service.onrender.com'; // Replace with your Render URL
+    setInterval(async () => {
+        try {
+            const res = await axios.get(url);
+            console.log('✅ Self-ping successful:', res.status);
+        } catch (error) {
+            console.error('⚠️ Self-ping failed:', error.message);
+        }
+    }, 40000); // Ping every 40 seconds to prevent sleeping
+}
+
+keepAlive(); // Start self-pinging
 // Start bot
 bot.launch()
     .then(() => console.log('✅ Bot successfully launched!'))
