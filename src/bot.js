@@ -3,24 +3,15 @@ const dotenv = require('dotenv');
 schedule = require('node-schedule');
 const moment = require('moment-timezone');
 const fs = require('fs');
-// ✅ Initialize Express Server
-const app = express();
-app.get('/', (req, res) => {
-    res.send('Horai Bot is running!');
-});
-
-// ✅ Start Server on Render Port (Default: 3000)
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`✅ Server running on port ${PORT}`);
-});
+// ✅ Add Express here at the top
+const express = require('express');
+const app = express();  
 
 // Load environment variables
 dotenv.config();
 
 // Initialize bot
 const bot = new Telegraf(process.env.BOT_TOKEN);
-
 
 // Store user preferences and reminders
 const userPreferences = new Map();
@@ -630,24 +621,35 @@ const RENDER_URL = "https://horai-bot.onrender.com";
 
 const axios = require('axios');
 
+// ✅ Keep-Alive Ping to Prevent Render Sleep
 function keepAlive() {
-    const url = 'https://your-bot-service.onrender.com'; // Replace with your actual Render URL
     setInterval(async () => {
         try {
-            const res = await axios.get(url);
-            console.log('✅ Self-ping successful:', res.status);
+            const res = await axios.get(RENDER_URL);
+            console.log(`✅ Self-ping successful: ${res.status} - ${res.statusText}`);
         } catch (error) {
-            console.error('⚠️ Self-ping failed:', error.message);
+            console.error('⚠️ Self-ping failed:', error.response ? error.response.status : error.message);
         }
     }, 40000); // Ping every 40 seconds
 }
 
 keepAlive(); // Start self-pinging
-// Start bot
+// ✅ Setup Express Server to Keep Render Alive
+const PORT = process.env.PORT || 3000;
+
+app.get('/', (req, res) => {
+    res.send('✅ Horai Bot is running...');
+});
+
+app.listen(PORT, () => {
+    console.log(`✅ Horai Bot server is running on http://localhost:${PORT}`);
+});
+
+// ✅ Start bot
 bot.launch()
     .then(() => console.log('✅ Bot successfully launched!'))
-    .catch(err => console.error('Failed to launch bot:', err));
+    .catch(err => console.error('❌ Failed to launch bot:', err));
 
-// Enable graceful stop
+// ✅ Enable graceful stop
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
