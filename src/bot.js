@@ -3,7 +3,17 @@ const dotenv = require('dotenv');
 schedule = require('node-schedule');
 const moment = require('moment-timezone');
 const fs = require('fs');
+// ✅ Initialize Express Server
+const app = express();
+app.get('/', (req, res) => {
+    res.send('Horai Bot is running!');
+});
 
+// ✅ Start Server on Render Port (Default: 3000)
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`✅ Server running on port ${PORT}`);
+});
 
 // Load environment variables
 dotenv.config();
@@ -621,7 +631,7 @@ const RENDER_URL = "https://horai-bot.onrender.com";
 const axios = require('axios');
 
 function keepAlive() {
-    const url = 'https://your-bot-service.onrender.com'; // Replace with your Render URL
+    const url = 'https://your-bot-service.onrender.com'; // Replace with your actual Render URL
     setInterval(async () => {
         try {
             const res = await axios.get(url);
@@ -631,6 +641,7 @@ function keepAlive() {
         }
     }, 40000); // Ping every 40 seconds
 }
+
 keepAlive(); // Start self-pinging
 // Start bot
 bot.launch()
