@@ -614,7 +614,16 @@ schedule.scheduleJob('0 * * * *', sendHoraNotification);
 
 // Schedule notification for every Sub-Hora change (every 12 minutes)
 schedule.scheduleJob('*/12 * * * *', sendHoraNotification);
+const axios = require('axios');
 
+// Replace with your Render URL
+const RENDER_URL = "https://horai-bot.onrender.com";
+
+setInterval(() => {
+    axios.get(RENDER_URL)
+        .then(() => console.log("Pinged self to prevent sleeping"))
+        .catch((err) => console.error("Error pinging self:", err));
+}, 40000); // Every 40 seconds (40,000 ms)
 // Start bot
 bot.launch()
     .then(() => console.log('✅ Bot successfully launched!'))
